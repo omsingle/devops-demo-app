@@ -1,0 +1,19 @@
+services:
+  backend:
+    build: .
+    container_name: fastapi-backend
+    ports:
+      - "8000:8000"
+
+  postgres:
+    image: postgres:17
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: devopsdb
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
