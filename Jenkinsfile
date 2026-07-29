@@ -27,24 +27,7 @@ pipeline {
     steps {
         sh '''
         . venv/bin/activate
-
-        echo "===== CURRENT DIRECTORY ====="
-        pwd
-
-        echo "===== FILES ====="
-        ls -la
-        ls -la app
-
-        echo "===== PYTHON VERSION ====="
-        python --version
-
-        echo "===== PYTHON PATH ====="
-        python -c 'import sys; print(sys.path)'
-
-        echo "===== IMPORT TEST ====="
-        python -c 'from app.main import app; print("Import OK")'
-
-        echo "===== RUN PYTEST ====="
+        export PYTHONPATH=$PWD
         pytest -v
         '''
     }
