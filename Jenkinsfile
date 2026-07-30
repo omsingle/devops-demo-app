@@ -14,31 +14,30 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Test Application') {
+            agent {
+                docker {
+                    image 'python:3.12'
+                }
+            }
+
             steps {
                 sh '''
                 python3 -m venv venv
                 . venv/bin/activate
                 pip install -r requirements.txt
-                '''
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                sh '''
-                . venv/bin/activate
                 export PYTHONPATH=$PWD
                 pytest -v
                 '''
             }
         }
+
         stage('Build Docker Image') {
-    steps {
-        sh '''
-        docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
-        '''
-    }
-}
+            steps {
+                sh '''
+                docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+                '''
+            }
+        }
     }
 }
