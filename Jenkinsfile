@@ -1,9 +1,10 @@
 pipeline {
-    agent {
-    docker {
-        image 'python:3.12'
+    agent any
+
+    environment {
+        IMAGE_NAME = "yuki982/devops-demo-app"
+        IMAGE_TAG = "v1"
     }
-}
 
     stages {
 
@@ -24,13 +25,13 @@ pipeline {
         }
 
         stage('Run Tests') {
-    steps {
-        sh '''
-        . venv/bin/activate
-        export PYTHONPATH=$PWD
-        pytest -v
-        '''
-    }
-}
+            steps {
+                sh '''
+                . venv/bin/activate
+                export PYTHONPATH=$PWD
+                pytest -v
+                '''
+            }
+        }
     }
 }
