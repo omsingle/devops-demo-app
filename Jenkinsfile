@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = "yuki982/devops-demo-app"
-        IMAGE_TAG = "v1"
+        IMAGE_TAG = "v${BUILD_NUMBER}"
     }
 
     stages {
@@ -39,5 +39,28 @@ pipeline {
                 '''
             }
         }
+
+        stage('Docker Login') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub-creds',
+                        usernameVariable: 'DOCKER_USERNAME',
+                        passwordVariable: 'DOCKER_PASSWORD'
+                    )
+                ]) {
+                    sh '''
+                    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                    '''
+                }
+            }
+        }
+        stage('Push Docker Image') {
+    steps {
+        sh '''
+        docker push ${IMAGE_NAME}:${IMAGE_TAG}
+        '''
+    }
+}
     }
 }
